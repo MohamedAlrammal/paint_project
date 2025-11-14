@@ -1,0 +1,31 @@
+
+.toolbar {
+  display: flex;                    /* Makes items align horizontally */
+  gap: 12px;                        /* Space between icons */
+  padding: 8px 12px;
+  background: #f0f0f0;              /* Light background */
+  border-bottom: 1px solid #ccc;
+  list-style: none;                 /* Remove bullets */
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  width: min(400px, 90vw);
+  border-radius: 5px;          /* Responsive width */
+}
+
+.toolbar li {
+  padding: 8px;
+  cursor: pointer;
+  font-size: 28px;                  /* Icon size */
+  border-radius: 6px;               /* Rounded hover effect */
+  transition: background 0.2s;
+}
+
+.toolbar li:hover {
+  background: #e0e0e0;
+}
+
+.toolbar li.active {
+  background: #d0d0ff;              /* Highlight selected tool */
+  color: #2a2a8a;
+}
