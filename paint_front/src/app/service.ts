@@ -11,7 +11,7 @@ export class Service {
         const response  = await fetch(this.urlStages + stageName);
         
         if (!response.ok) {
-        throw new Error(`it seems that the image is not found or its name is incorrect, status: ${response.status}`);
+        throw new Error(`it seems that the image is not found or its name is incorrect, status: ${response.statusText}`);
         } 
         
         const data = await response.json();
@@ -30,11 +30,11 @@ export class Service {
           body: stageJson});
         
         if (!response.ok) {
-        throw new Error(`Server can't save the image., status: ${response.status}`);
+        throw new Error(`Server can't save the image., status: ${response.statusText}`);
         } 
         
         const data = await response.json();
-        console.log("returned acknowledgement after saving" + data);
+        console.log("returned acknowledgement after saving: " + data);
       }catch(error){
         console.error("error in saving the image" + error);
       }
@@ -49,11 +49,11 @@ export class Service {
         );
         
         if (!response.ok) {
-        throw new Error(`Server can't save(send) the data of the shape., status: ${response.status}`);
+        throw new Error(`Server can't save(send) the data of the shape., status: ${response.statusText}`);
         } 
         
         const data = await response.json();
-        console.log("returned acknowledgement after saving" + data);
+        console.log("returned acknowledgement after saving: " + data);
       }catch(error){
         console.error("error in saving the shape" + error);
       }
@@ -68,22 +68,51 @@ export class Service {
         );
         
         if (!response.ok) {
-        throw new Error(`Server can't save(send) the data of the shape., status: ${response.status}`);
+        throw new Error(`Server can't update the data of the shape., status: ${response.statusText}`);
         } 
         
         const data = await response.json();
-        console.log("returned acknowledgement after saving" + data);
+        console.log("returned acknowledgement after updating: " + data);
       }catch(error){
-        console.error("error in saving the shape" + error);
+        console.error("error in updating the shape" + error);
       }
-
     }
 
-    public static deleteShape(){
-
+    public static async deleteShape(shapeJson:string){
+       try{  
+        const response  = await fetch(this.urlShapes + JSON.parse(shapeJson).id, {
+          method:"DELETE",
+          headers:{ "Content_Type":'application/json'}, 
+          body: shapeJson}
+        );
+        
+        if (!response.ok) {
+        throw new Error(`Server can't delete the shape., status: ${response.statusText}`);
+        } 
+        
+        const data = await response.json();
+        console.log("returned acknowledgement after deleting: " + data);
+      }catch(error){
+        console.error("error in deleting the shape" + error);
+      }
     }
 
-    public static copyShape(){
-
+    public static async copyShape(shapeJson:string){
+      try{  
+        const response  = await fetch(this.urlShapes + JSON.parse(shapeJson).id, {
+          method:"POST",
+          headers:{ "Content_Type":'application/json'}, 
+          body: shapeJson}
+        );
+        
+        if (!response.ok) {
+        throw new Error(`Server can't copy the shape., status: ${response.statusText}`);
+        } 
+        
+        const data = await response.json();
+        console.log("returned acknowledgement after copying: " + data);
+      }catch(error){
+        console.error("error in copying the shape" + error);
+      }
     }
 }
