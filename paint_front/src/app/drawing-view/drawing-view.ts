@@ -86,7 +86,7 @@ export class DrawingViewComponent implements AfterViewInit {
 
   private onPointerDown(): void {
     if (!this.shouldDraw()) return;
-
+    
     const pos = this.stage.getPointerPosition();
     if (!pos) return;
 
@@ -100,18 +100,29 @@ export class DrawingViewComponent implements AfterViewInit {
 
   private onPointerMove(): void {
     if (!this.previewShape) return;
-
+    
     const pos = this.stage.getPointerPosition();
     if (!pos) return;
-
     this.resizeShape(this.previewShape, this.startPos, pos);
     this.layer.batchDraw();
   }
 
   private onPointerUp(): void {
+    // if the element is zero-sized don't add it
+    const pos = this.stage.getPointerPosition();
+    if(this.startPos.x === pos?.x && this.startPos.y === pos?.y) {
+      this.previewShape?.destroy();
+      this.previewShape = null;
+      this.layer.draw();
+      console.log("got rid of the shit");
+      
+      return;
+    }
     if (!this.previewShape) return;
     this.saveState();
+    
     this.previewShape = null;
+    
   }
 
   // ──────────────────────────────────────────────────────────
@@ -236,7 +247,7 @@ export class DrawingViewComponent implements AfterViewInit {
 
     this.selectedShape.draggable(false);
     this.transformer.nodes([]);
-
+    this.saveState();
     this.selectedShape = null;
     this.layer.draw();
   }
