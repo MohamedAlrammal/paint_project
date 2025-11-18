@@ -1,0 +1,45 @@
+<div class="property-box">
+	<div class="pickers">
+		<div class="picker-container">
+			<h3>Outline Color</h3>
+					<div class="color-row">
+						<div *ngFor="let c of presetColors" 
+                  class="color-circle" 
+                  [ngStyle]="{'background': c}" 
+                  (click)="setOutlineColor(c)" 
+                  [class.selected]="c === colors.outline">
+            </div>
+
+            <div class="separator"> </div>
+                  
+						<div class="color-input-wrapper">
+							<input type="color"
+                    class="custom-color-input" 
+                    (change)="setOutlineColor($event.target.value)" 
+                    [value]="colors.outline"/>
+						</div>
+					</div>
+		</div>
+
+		<div class="picker-container">
+			<h3>Background Color</h3>
+					<div class="color-row">
+						<div *ngFor="let c of presetColors" 
+                  class="color-circle" 
+                  [ngStyle]="{'background': c}" 
+                  (click)="setBackColor(c)" 
+                  [class.selected]="c === colors.backGround">
+            </div>
+
+            <div class="separator"> </div>
+
+						<div class="color-input-wrapper">
+							<input type="color" 
+                    class="custom-color-input" 
+                    (change)="setBackColor($event.target.value)" 
+                    [value]="colors.backGround"/>
+						</div>
+					</div>
+		</div>
+	</div>
+</div>
