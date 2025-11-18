@@ -1,0 +1,11 @@
+<ul class="toolbar">
+  @for (item of toolsList; track item.tool) {
+    <li
+      class="material-symbols-outlined"
+      [class.active]="tool === item.tool"
+      (click)="setTool(item.tool)"
+    >
+      {{ item.icon }}
+    </li>
+  }
+</ul>
