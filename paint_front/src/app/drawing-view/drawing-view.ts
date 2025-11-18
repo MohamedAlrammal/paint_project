@@ -114,7 +114,6 @@ export class DrawingViewComponent implements AfterViewInit {
       this.previewShape?.destroy();
       this.previewShape = null;
       this.layer.draw();
-      console.log("got rid of the shit");
       
       return;
     }
