@@ -2,6 +2,8 @@ package com.example.Painting.Service;
 
 import com.example.Painting.CommandPattern.Command;
 import com.example.Painting.CommandPattern.OpType;
+import com.example.Painting.CommandPattern.Redo;
+import com.example.Painting.CommandPattern.Undo;
 import com.example.Painting.Dto.ShapeDto;
 import com.example.Painting.Entities.*;
 import com.example.Painting.Factory.FactoryOfShapes;
@@ -9,7 +11,11 @@ import com.example.Painting.Repository.CommandRepository;
 import com.example.Painting.Repository.ShapeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ShapeService {
@@ -19,6 +25,11 @@ public class ShapeService {
     CommandRepository commandRepository;
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    Undo undo;
+    @Autowired
+    Redo redo;
 //    there is some problems in classes in diffrent package
     public Shape createShape(ShapeDto dto){
         Shape shape_created= FactoryOfShapes.createShape(dto);
@@ -118,7 +129,7 @@ return  newState;
         Shape shape=shapeRepository.findById(dto.getId()).orElse(null);
         Shape oldState=shape.clone();
         Shape newState =shape;
-        if(dto.getType().equals("rect")){
+        if(dto.getType().equals("Rectangle")){
             ((Rectangle) shape).setWidth(dto.getWidth());
             ((Rectangle) shape).setHeight(dto.getHeight());
             ((Rectangle) shape).setX(dto.getX());
@@ -126,7 +137,7 @@ return  newState;
             newState =shape;
 
         }
-        else  if(dto.getType().equals("square")){
+        else  if(dto.getType().equals("Square")){
             ((Square) shape).setSide(dto.getSide());
             ((Square) shape).setX(dto.getX());
             ((Square) shape).setY(dto.getY());
@@ -134,7 +145,7 @@ newState =shape;
 
         }
 
-        else if( dto.getType().equals("ellipse")){
+        else if( dto.getType().equals("Ellipse")){
             ((Ellipse) shape).setRadiusX(dto.getRadiusX());
             ((Ellipse) shape).setRadiusY(dto.getRadiusY());
             ((Ellipse) shape).setCenterX(dto.getCenterX());
@@ -142,14 +153,14 @@ newState =shape;
             newState =shape;
 
         }
-        else if(dto.getType().equals("circle")){
+        else if(dto.getType().equals("Circle")){
             ((Circle) shape).setRadius(dto.getRadius());
             ((Circle) shape).setCenterX(dto.getCenterX());
             ((Circle) shape).setCenterY(dto.getCenterY());
         }
 
 
-        else if(dto.getType().equals("line")){
+        else if(dto.getType().equals("Line")){
             ((Line)shape).setX1(dto.getX1());
             ((Line)shape).setY1(dto.getY1());
             ((Line)shape).setX2(dto.getX2());
@@ -157,7 +168,7 @@ newState =shape;
 
 
         }
-        else  if(dto.getType().equals("triangle")){
+        else  if(dto.getType().equals("Triangle")){
 
             ((Triangle)shape).setX1(dto.getX1());
             ((Triangle)shape).setY1(dto.getY1());
@@ -205,12 +216,30 @@ Command command;
 
     }
 
+public Pair<Shape,String> undo(){
+     Pair <Shape,String>  p =  undo.undo();
+    return p;
+}
 
 
 
+    public Pair<Shape,String> redo(){
+        Pair <Shape,String>  p =  redo.redo();
+        return p;
+    }
 
+public ByteArrayResource exportJson() {
+    List<Shape> shapes = shapeRepository.findAll();
+    String json;
+    try {
+        json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(shapes);
 
-
+    } catch (Exception e) {
+        throw new RuntimeException("no ");
+    }
+    ByteArrayResource resource=new ByteArrayResource(json.getBytes());
+    return resource;
+}
 
 
 
