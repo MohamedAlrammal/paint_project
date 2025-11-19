@@ -4,6 +4,12 @@ import com.example.Painting.Dto.ShapeDto;
 import com.example.Painting.Entities.Shape;
 import com.example.Painting.Service.ShapeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.util.Pair;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,11 +52,25 @@ public class ShapeController {
         return shapeService.copy(shapeId);
     }
 
+    @GetMapping("/undo")
+    public Pair<Shape,String> undo( ){
+        return shapeService.undo();
+    }
 
+    @GetMapping("/redo")
+    public Pair<Shape,String> redo( ){
+        return shapeService.redo();
+    }
 
-
-
-
+    @GetMapping("/exportJson")
+    public ResponseEntity<Resource> exportJson( ){
+        ByteArrayResource resource = shapeService.exportJson();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=shapes.json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(resource);
+    }
 
 
 
