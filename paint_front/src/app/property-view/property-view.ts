@@ -11,11 +11,10 @@ import { ColorChromeModule } from 'ngx-color/chrome';
   styleUrls: ['./property-view.css'],
 })
 export class PropertyView {
-  @Input() colors : ShapeColor = {outline : "black" , backGround : "#ffffff"};
+  @Input() colors : ShapeColor = {outline : "#000000" , backGround : "transparent"};
   @Output() colorChange = new EventEmitter<ShapeColor>();
 
-  presetColors: string[] = ['#000000', '#ffffff','#4cc3d9',
-                            '#563838',  '#f4b942', '#e94e3c'];
+  presetColors: string[] = ['#000000', '#ffffff','#4cc3d9', '#f4b942', '#e94e3c'];
 
   setOutlineColor(outlineColor : string) {
     this.colors.outline = outlineColor;

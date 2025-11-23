@@ -13,7 +13,7 @@ import { DrawingViewComponent } from './drawing-view/drawing-view';
 })
 export class App {
   tool: DrawTools = DrawTools.Mouse;
-  colors : ShapeColor = {outline : "black" , backGround : "#ffffff"};
+  colors : ShapeColor = {outline : "#000000" , backGround : "transparent"};
   onToolChange(selectedTool: DrawTools) {
     this.tool = selectedTool;
   }
