@@ -64,7 +64,7 @@ export class DrawingViewComponent implements AfterViewInit {
       }
     });
     // erase click
-    
+
     window.addEventListener('keydown', (e) => this.onKeyDown(e));
     this.transformer.on('transformend', () => {
       // this.saveState();
@@ -86,7 +86,7 @@ export class DrawingViewComponent implements AfterViewInit {
 
   private onPointerDown(): void {
     if (!this.shouldDraw()) return;
-    
+
     const pos = this.stage.getPointerPosition();
     if (!pos) return;
 
@@ -100,7 +100,7 @@ export class DrawingViewComponent implements AfterViewInit {
 
   private onPointerMove(): void {
     if (!this.previewShape) return;
-    
+
     const pos = this.stage.getPointerPosition();
     if (!pos) return;
     this.resizeShape(this.previewShape, this.startPos, pos);
@@ -114,14 +114,14 @@ export class DrawingViewComponent implements AfterViewInit {
       this.previewShape?.destroy();
       this.previewShape = null;
       this.layer.draw();
-      
+
       return;
     }
     if (!this.previewShape) return;
     this.saveState();
-    
+
     this.previewShape = null;
-    
+
   }
 
   // ──────────────────────────────────────────────────────────
@@ -265,14 +265,14 @@ export class DrawingViewComponent implements AfterViewInit {
       // this.saveState();
     }
   }
-private saveState() {
-  const current = this.layer.toJSON(); // snapshot
-  if (this.currentState === current) return; // no changes
-  if (this.currentState !== '') {
-    this.undoStack.push(this.currentState);
+  private saveState() {
+    const current = this.layer.toJSON(); // snapshot
+    if (this.currentState === current) return; // no changes
+    if (this.currentState !== '') {
+      this.undoStack.push(this.currentState);
+    }
+    this.currentState = current;
   }
-  this.currentState = current;
-}
 
 
   private undo() {
@@ -291,9 +291,18 @@ private saveState() {
     this.applyState(this.currentState);
   }
   private applyState(json: string) {
+    // detach transformer from the existing layer so it isn't destroyed
+    if (this.transformer && this.transformer.getLayer()) {
+      this.transformer.remove();
+    }
+
     this.layer.destroy();
     this.layer = Konva.Node.create(json) as Konva.Layer;
     this.stage.add(this.layer);
+
+    // re-add transformer to the new layer so resize handles work
+    this.layer.add(this.transformer);
+
     this.wireLayerEvents();
     this.layer.draw();
   }
@@ -302,9 +311,17 @@ private saveState() {
   private restoreState(json: string) {
     this.clearSelection();
 
+    // detach transformer from the existing layer so it isn't destroyed
+    if (this.transformer && this.transformer.getLayer()) {
+      this.transformer.remove();
+    }
+
     this.layer.destroy();
     this.layer = Konva.Node.create(json) as Konva.Layer;
     this.stage.add(this.layer);
+
+    // re-add transformer to the new layer so resize handles work
+    this.layer.add(this.transformer);
 
     // rebind selection + eraser + drag listeners
     this.wireLayerEvents();
@@ -337,6 +354,6 @@ private saveState() {
       // this.saveState();
     });
     this.layer.on('click', (e) => this.onShapeClick(e));
-    
+
   }
 }
