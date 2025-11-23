@@ -1,0 +1,23 @@
+.main-project {
+  display: grid;
+  grid-template-areas:
+    "tool-bar drawing-container"
+    "property-view drawing-container"
+    "something drawing-container";
+  grid-template-columns: 500px auto;
+  grid-template-rows: 100px 100px auto;
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+}
+.tool-bar {
+  grid-area: tool-bar;
+}
+.property-view {
+  grid-area: property-view;
+}
+.drawing-container {
+  grid-area: drawing-container;
+  width: 100%;
+height: 100%;
+}

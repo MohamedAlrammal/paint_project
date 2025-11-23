@@ -6,3 +6,8 @@ export enum DrawTools {
   Ellipse = "ellipse",
   Triangle = "triangle",
 }
+
+export interface ShapeColor {
+  outline : string;
+  backGround : string;
+}
